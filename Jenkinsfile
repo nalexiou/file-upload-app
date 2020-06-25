@@ -12,7 +12,7 @@ pipeline {
         cluster = ""
         exec_role_arn = ""
         def dockerHome = tool 'docker'
-        env.PATH = "${dockerHome}/bin:/var/jenkins_home/bin:${env.PATH}"
+        PATH = "${dockerHome}/bin:/var/jenkins_home/bin:${PATH}"
 
     }
 
