@@ -47,7 +47,7 @@ pipeline {
         // Update service on Fargate with new task definition
         //sh "aws ecs update-service --cluster ${cluster} --service file-app-service --task-definition ${task_def_arn} --region ${region}"
         // Force redeploy on Existing service
-         sh "aws ecs update-service --cluster  ${cluster} --service file-app-service --force-new-deployment
+        sh "aws ecs update-service --cluster  ${cluster} --service file-app-service --force-new-deployment"
     }
 }
     }
