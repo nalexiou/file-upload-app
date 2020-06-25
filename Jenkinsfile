@@ -8,9 +8,9 @@ pipeline {
     environment {
 	    region = "us-east-1"
         docker_repo_uri = "982468706400.dkr.ecr.us-east-1.amazonaws.com/file-app"
-		    task_def_arn = ""
-        cluster = ""
-        exec_role_arn = ""
+		    task_def_arn = "arn:aws:ecs:us-east-1:982468706400:task-definition/file-app"
+        cluster = "TestingCluster"
+        exec_role_arn = "arn:aws:iam::982468706400:role/ecsTaskExecutionRole"
         def dockerHome = tool 'docker'
         PATH = "${dockerHome}/bin:/var/jenkins_home/bin:${PATH}"
 
@@ -24,7 +24,8 @@ pipeline {
             steps {
                 // Get SHA1 of current commit
                 script {
-                    commit_id = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
+                    //commit_id = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
+                    commit_id = "latest"
                 }
                 // Build the Docker image
                 sh "docker build -t ${docker_repo_uri}:${commit_id} ."
@@ -36,5 +37,16 @@ pipeline {
                 sh "docker rmi -f ${docker_repo_uri}:${commit_id}"
             }
         }
+
+        stage('Deploy') {
+        steps {
+        // Override image field in taskdef file
+        //sh "sed -i 's|{{image}}|${docker_repo_uri}:${commit_id}|' taskdef.json"
+        // Create a new task definition revision
+        //sh "aws ecs register-task-definition --execution-role-arn ${exec_role_arn} --cli-input-json file://taskdef.json --region ${region}"
+        // Update service on Fargate
+        sh "aws ecs update-service --cluster ${cluster} --service file-app-service --task-definition ${task_def_arn} --region ${region}"
+    }
+}
     }
 }
