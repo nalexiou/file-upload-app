@@ -1,7 +1,10 @@
 // Declarative pipelines must be enclosed with a "pipeline" directive.
 pipeline {
     // This line is required for declarative pipelines. Just keep it here.
-    agent {label 'fargate-jenkins-agent'}
+    agent {ecs {
+      label 'fargate-jenkins-agent'
+      }
+      }
 
     // This section contains environment variables which are available for use in the
     // pipeline's stages.
