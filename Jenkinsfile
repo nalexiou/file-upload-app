@@ -27,11 +27,13 @@ pipeline {
                     //commit_id = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
                     commit_id = "latest"
                 }
+
+                sh 'docker login --username AWS --password $(docker run --rm amazon/aws-cli ecr get-login-password --region us-east-1) 982468706400.dkr.ecr.us-east-1.amazonaws.com'
                 // Build the Docker image
-                sh 'docker login --username AWS --password $(aws ecr get-login-password --region us-east-1) 982468706400.dkr.ecr.us-east-1.amazonaws.com'
+                //sh 'docker login --username AWS --password $(aws ecr get-login-password --region us-east-1) 982468706400.dkr.ecr.us-east-1.amazonaws.com'
                 sh "docker build -t ${docker_repo_uri}:${commit_id} ."
                 // Get Docker login credentials for ECR
-                sh "aws ecr get-login --no-include-email --region ${region} | sh"
+                //sh "aws ecr get-login --no-include-email --region ${region} | sh"
                 // Push Docker image
                 sh "docker push ${docker_repo_uri}:${commit_id}"
                 // Clean up
