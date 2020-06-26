@@ -2,7 +2,7 @@
 pipeline {
     // This line is required for declarative pipelines. Just keep it here.
     agent {ecs {
-      label 'fargate-jenkins-agent'
+      inheritFrom 'fargate-jenkins-agent'
       }
       }
 
